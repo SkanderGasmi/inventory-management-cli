@@ -1,20 +1,23 @@
----
+# Use latest OpenJDK 21 with slim OS for smaller image size
+FROM eclipse-temurin:25-jdk-jammy
 
-## 📄 Dockerfile.template
-```dockerfile
-# TODO: Use Java 17 base image
-FROM __________
+# Create a non-root user for security best practices
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# TODO: Set working directory
-WORKDIR __________
+# Set working directory inside container
+WORKDIR /app
 
-# TODO: Copy the JAR file from Maven target directory
-# Hint: The JAR file is created in target/ directory with name simple-inventory-1.0.0.jar
-COPY __________ __________
+# Copy the JAR file from Maven target directory
+COPY target/simple-inventory-1.0.0.jar /app/simple-inventory-1.0.0.jar
 
-# TODO: Expose port (optional for CLI application)
-# EXPOSE ____
+# Change ownership to non-root user
+RUN chown -R appuser:appuser /app
 
-# TODO: Run the application
-# Hint: Use java -jar command to run the JAR file
-CMD ["__________", "__________", "__________"]
+# Switch to non-root user
+USER appuser
+
+# Expose port (optional for CLI applications)
+# EXPOSE 8080
+
+# Command to run the application with optimized JVM settings
+CMD ["java", "-jar", "simple-inventory-1.0.0.jar"]

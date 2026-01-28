@@ -1,97 +1,139 @@
-# Simple Inventory Management System
+# Inventory Management CLI
 
-A beginner-friendly Java application demonstrating Factory and Strategy design patterns through a command-line inventory system.
+![Java](https://img.shields.io/badge/Java-JDK%2025-orange)
+![Console App](https://img.shields.io/badge/Application-Console-blue)
+![OOP](https://img.shields.io/badge/Concepts-OOP-success)
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Functionality](#functionality)
+- [Tech Stack](#tech-stack)
+- [Setup Instructions](#setup-instructions)
+- [Why I Built This](#why-i-built-this)
+- [Future Improvements](#future-improvements)
+
+---
+
+## Overview
+
+The **Inventory Management CLI** is a **Java console application** that allows users to manage products, track sales, apply discounts, and monitor stock levels.
+
+The application demonstrates **core Java principles**, including object-oriented design, Factory and Strategy patterns, collections, and CLI-based user interaction.
+
+It also includes a **Dockerfile** for containerized deployment.
+
+---
 
 ## Features
-- Add products (Books, Electronics) using **Factory Pattern**
-- Calculate discounts (Student, Bulk, None) using **Strategy Pattern**
-- Process sales and track inventory
-- View inventory statistics and reports
 
-## Quick Start
+- Add new products with type validation
+- Sell products and automatically update stock
+- Add stock to existing products
+- View inventory and low-stock alerts
+- Apply discounts:
+  - Student discount (10% on books)
+  - Bulk discount (15% on 5+ items)
+  - No discount
+- View inventory statistics
+- CLI menu for interactive user experience
+- Unit tests using JUnit 5
+- Dockerized deployment for portability
 
-### Prerequisites
-- Java 17+
-- Maven 3.6+
+---
 
-### Run the Application
+## Functionality
+
+- **Add Product**  
+  Register a new product with ID, name, type, price, and quantity. Books have a minimum price validation.
+
+- **Sell Product**  
+  Sell a product, automatically applying any relevant discounts.
+
+- **Add Stock**  
+  Increase the quantity of existing products in inventory.
+
+- **View Inventory**  
+  Display all products with ID, name, type, price, and quantity.
+
+- **View Statistics**  
+  Show total products, total inventory value, and low-stock products.
+
+---
+
+## Tech Stack
+
+- **Java (JDK 25)**
+- Console-based application
+- Design patterns:
+  - Factory Pattern
+  - Strategy Pattern
+- JUnit 5 for unit testing
+- Docker for containerized deployment
+
+---
+
+## Setup Instructions
+
+1. **Clone the repository:**
+
 ```bash
-# Method 1: Direct execution
-mvn compile
-java -cp target/classes inventory.Main
+git clone https://github.com/SkanderGasmi/inventory-management-cli.git
+cd inventory-management-cli
+````
 
-# Method 2: JAR file
-mvn package
+2. **Build the project with Maven:**
+
+```bash
+mvn clean package
+```
+
+This creates the JAR file: `target/simple-inventory-1.0.0.jar`.
+
+3. **Run locally without Docker:**
+
+```bash
+mvn exec:java
+```
+
+or directly with Java:
+
+```bash
 java -jar target/simple-inventory-1.0.0.jar
+```
 
-# Method 3: Docker
-mvn package
+4. **Build the Docker image:**
+
+```bash
 docker build -t simple-inventory .
+```
+
+5. **Run the Docker container:**
+
+```bash
 docker run -it simple-inventory
 ```
 
-## Project Structure
-```
-src/main/java/inventory/
-├── Product.java              # Data model
-├── ProductFactory.java       # Factory Pattern
-├── DiscountCalculator.java   # Strategy Pattern  
-├── InventoryManager.java     # Business logic
-└── Main.java                 # CLI interface
+The CLI menu will appear in the container for interactive use.
 
-src/test/java/inventory/
-├── ProductFactoryTest.java
-├── DiscountCalculatorTest.java
-└── InventoryManagerTest.java
-```
+---
 
-## Design Patterns
+## Why I Built This
 
-### Factory Pattern
-```java
-// Creates products without exposing creation logic
-Product book = ProductFactory.createProduct("Book", "Java Guide", 29.99, 10);
-Product laptop = ProductFactory.createProduct("Electronics", "Laptop", 799.99, 5);
-```
+I built this project to strengthen my understanding of **object-oriented programming**, **Java design patterns** (Factory & Strategy), and **collection handling**.
 
-### Strategy Pattern
-```java
-// Different discount algorithms
-double studentDiscount = DiscountCalculator.calculateDiscount(book, 2, "Student");  // 10% off books
-double bulkDiscount = DiscountCalculator.calculateDiscount(laptop, 6, "Bulk");      // 15% off 5+ items
-```
+It also provided hands-on experience with **unit testing**, **CLI design**, and **containerized deployment** using Docker.
 
-## Testing
-```bash
-# Run all tests
-mvn test
+---
 
-# Run specific test
-mvn test -Dtest=ProductFactoryTest
-```
+## Future Improvements
 
-## Usage
-1. Run the application
-2. Use menu options:
-   - **Add Product** → Demonstrates Factory Pattern
-   - **Sell Product** → Demonstrates Strategy Pattern
-   - **View Inventory** → See current stock
-   - **View Statistics** → Inventory reports
+* Add user authentication and roles (admin vs regular user)
+* Persist inventory data in a database (e.g., MySQL or PostgreSQL)
+* Add more complex discount rules and promotions
+* Convert the CLI application to a GUI or REST-based web application
+* Generate PDF/CSV reports for inventory and sales
 
-## Learning Objectives
-- Implement Factory and Strategy design patterns
-- Write unit tests with JUnit 5
-- Use Maven for build management
-- Deploy with Docker containers
-- Follow clean code practices
-
-## Troubleshooting
-```bash
-# If compilation fails
-mvn clean compile -U
-
-# If Docker build fails
-mvn clean package
-ls target/simple-inventory-1.0.0.jar  # Verify JAR exists
-docker build -t simple-inventory .
-```

@@ -41,20 +41,20 @@ public class DiscountCalculator {
      */
     public static DiscountResult calculateDiscount(Product product, int quantity, String discountType) {
         double discountAmount = 0.0;
-        String description = "No discount applied";
+        String description = "No discount";
 
         switch (discountType.toUpperCase()) {
             case "STUDENT":
                 if ("BOOK".equalsIgnoreCase(product.getType())) {
                     discountAmount = product.getPrice() * quantity * 0.10;
-                    description = "10% student discount applied";
+                    description = "Student discount";
                 }
                 break;
 
             case "BULK":
                 if (quantity >= 5) {
                     discountAmount = product.getPrice() * quantity * 0.15;
-                    description = "15% bulk purchase discount applied";
+                    description = "Bulk discount";
                 }
                 break;
 
