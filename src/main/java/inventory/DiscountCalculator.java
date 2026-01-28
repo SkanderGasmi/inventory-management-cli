@@ -59,4 +59,6 @@ public class DiscountCalculator {
                 break;
         }
 
-        return new Disco
+        return new DiscountResult(discountAmount, description);
+    }
+}
