@@ -4,109 +4,117 @@ import java.util.*;
 
 /**
  * Main business logic class that manages inventory operations.
- * TODO: Implement inventory management using Factory and Strategy patterns.
- *
- * Requirements:
- * - Use ProductFactory for creating products
- * - Use DiscountCalculator for sales with discounts
- * - Maintain product collection
- * - Provide inventory operations and statistics
  */
 public class InventoryManager {
 
-    // TODO: Declare collection to store products
-    // private Map<String, Product> products;
+    private final Map<String, Product> products;
 
-    /**
-     * TODO: Implement constructor
-     */
     public InventoryManager() {
-        // TODO: Initialize the products collection
+        products = new HashMap<>();
     }
 
     /**
-     * TODO: Add product to inventory using Factory pattern
-     * @param id - product identifier
-     * @param name - product name
-     * @param type - product type
-     * @param price - product price
-     * @param quantity - initial quantity
+     * Add product to inventory using Factory pattern.
      */
     public void addProduct(String id, String name, String type, double price, int quantity) {
-        // TODO: Implement product addition
-        // Use ProductFactory.createProduct()
-        // Handle exceptions and display appropriate messages
-        // Add product to collection if successful
+        try {
+            Product product = ProductFactory.createProduct(id, name, type, price, quantity);
+            products.put(id, product);
+            System.out.println("Added product: " + product);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Failed to add product: " + e.getMessage());
+        }
     }
 
     /**
-     * TODO: Sell product with discount using Strategy pattern
-     * @param id - product identifier
-     * @param quantity - quantity to sell
-     * @param discountType - type of discount to apply
+     * Sell product using Strategy pattern for discounts.
      */
     public void sellProduct(String id, int quantity, String discountType) {
-        // TODO: Implement sales logic
-        // 1. Find product by ID
-        // 2. Validate stock availability
-        // 3. Calculate discount using DiscountCalculator
-        // 4. Calculate total price and final price
-        // 5. Update product quantity
-        // 6. Display sale information
+        Product product = products.get(id);
+        if (product == null) {
+            System.out.println("Product ID not found: " + id);
+            return;
+        }
+        if (!product.isInStock() || quantity > product.getQuantity()) {
+            System.out.println("Insufficient stock for product: " + product.getName());
+            return;
+        }
+
+        DiscountCalculator.DiscountResult discountResult = DiscountCalculator.calculateDiscount(product, quantity,
+                discountType);
+
+        double originalPrice = product.getPrice() * quantity;
+        double finalPrice = originalPrice - discountResult.getDiscountAmount();
+
+        product.sell(quantity);
+
+        System.out.printf("Sold %d x %s%n", quantity, product.getName());
+        System.out.printf("Original Price: %.2f%n", originalPrice);
+        System.out.printf("Discount: %.2f (%s)%n", discountResult.getDiscountAmount(), discountResult.getDescription());
+        System.out.printf("Final Price: %.2f%n", finalPrice);
     }
 
     /**
-     * TODO: Add stock to existing product
-     * @param id - product identifier
-     * @param quantity - quantity to add
+     * Add stock to existing product.
      */
     public void addStock(String id, int quantity) {
-        // TODO: Implement stock addition
-        // Find product and add stock
-        // Display confirmation message
+        Product product = products.get(id);
+        if (product == null) {
+            System.out.println("Product ID not found: " + id);
+            return;
+        }
+        product.addStock(quantity);
+        System.out.println("Added " + quantity + " units to product: " + product.getName());
     }
 
     /**
-     * TODO: Display all products in inventory
+     * Display all products in inventory.
      */
     public void viewInventory() {
-        // TODO: Implement inventory display
-        // Check if inventory is empty
-        // Display all products with formatting
+        if (products.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
+        System.out.println("Inventory:");
+        products.values().forEach(System.out::println);
     }
 
     /**
-     * TODO: Calculate total inventory value
-     * @return total value of all products
+     * Calculate total inventory value.
      */
     public double getInventoryValue() {
-        // TODO: Calculate total value
-        // Iterate through products and sum (price * quantity)
-        return 0.0; // Placeholder
+        return products.values().stream()
+                .mapToDouble(p -> p.getPrice() * p.getQuantity())
+                .sum();
     }
 
     /**
-     * TODO: Get products with low stock
-     * @param threshold - minimum stock level
-     * @return list of products below threshold
+     * Get products with low stock.
      */
     public List<Product> getLowStockProducts(int threshold) {
-        // TODO: Implement low stock detection
-        // Filter products with quantity <= threshold
-        return new ArrayList<>(); // Placeholder
+        List<Product> lowStock = new ArrayList<>();
+        for (Product product : products.values()) {
+            if (product.getQuantity() <= threshold) {
+                lowStock.add(product);
+            }
+        }
+        return lowStock;
     }
 
     /**
-     * TODO: Display inventory statistics
+     * Display inventory statistics.
      */
     public void viewStatistics() {
-        // TODO: Implement statistics display
-        // Show total products count
-        // Show total inventory value
-        // Show low stock alerts (threshold = 5)
-    }
+        System.out.println("=== Inventory Statistics ===");
+        System.out.println("Total products: " + products.size());
+        System.out.printf("Total inventory value: %.2f%n", getInventoryValue());
 
-    // TODO: Optional helper methods
-    // private boolean productExists(String id) { }
-    // private void displaySalesSummary(Product product, int quantity, double originalPrice, double finalPrice, String discountInfo) { }
+        List<Product> lowStock = getLowStockProducts(5);
+        if (!lowStock.isEmpty()) {
+            System.out.println("Low stock products (<=5):");
+            lowStock.forEach(p -> System.out.printf("- %s (%d units)%n", p.getName(), p.getQuantity()));
+        } else {
+            System.out.println("No low stock alerts.");
+        }
+    }
 }
