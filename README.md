@@ -22,7 +22,7 @@
 
 The **Inventory Management CLI** is a **Java console application** that allows users to manage products, track sales, apply discounts, and monitor stock levels.
 
-The application demonstrates **core Java principles**, including object-oriented design, Factory and Strategy patterns, collections, and CLI-based user interaction.
+The application demonstrates **core Java principles**, including object-oriented design, Factory and Strategy design patterns, collections, and CLI-based user interaction.
 
 It also includes a **Dockerfile** for containerized deployment.
 
